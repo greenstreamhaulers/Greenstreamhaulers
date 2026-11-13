@@ -152,3 +152,59 @@
   </script>
 </body>
 </html>
+        <label class="field-label">📸 Upload Photo of Pile (Optional)</label>
+        <input type="file" name="junk_photo" accept="image/*" />
+        <label class="field-label">Your Name *</label>
+        <input type="text" name="customer_name" required />
+        <label class="field-label">Phone Number *</label>
+        <input type="tel" name="phone_number" required />
+        <label class="field-label">Bloomington / Monroe County Area</label>
+        <select name="service_area">
+          <option>Downtown / IU Campus</option>
+          <option>Eastside / College Mall</option>
+          <option>Southside / Clear Creek</option>
+          <option>Westside / Ellettsville</option>
+          <option>Lake Monroe / South County</option>
+          <option>Spencer / Bedford Area</option>
+        </select>
+        <label class="field-label">Street Address *</label>
+        <input type="text" name="street_address" required />
+        <div class="summary-box">
+          <div class="summary-line"><span>Service:</span><strong id="sum-service">Minimum / Single Item</strong></div>
+          <div class="summary-line"><span>Add-Ons:</span><strong id="sum-addons">$0</strong></div>
+          <div class="summary-line"><span>10% Discount:</span><strong id="sum-discount">-$0</strong></div>
+          <div class="summary-total"><span>Estimated Total:</span><span id="sum-total">$85</span></div>
+        </div>
+        <button type="submit" class="submit-btn">🚛 Book F-250 Pickup Now</button>
+      </form>
+    </div>
+  </div>
+  <footer>Green Stream Haulers • Bloomington & Monroe County, IN • (812) 681-6581</footer>
+  <script>
+    let basePrice = 85, serviceName = 'Minimum / Single Item (1/8 Trailer)';
+    function selectTier(btn, name, price, pct, lbs) {
+      document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active'); basePrice = price; serviceName = name;
+      document.getElementById('fill-pct').innerText = pct + '%';
+      document.getElementById('divert-lbs').innerText = lbs;
+      document.getElementById('bar-fill').style.width = pct + '%';
+      updateTotal();
+    }
+    function updateTotal() {
+      let addons = 0, names = [];
+      document.querySelectorAll('.addon:checked').forEach(c => { addons += Number(c.value); names.push(c.dataset.name); });
+      let disc = (document.getElementById('discount-check').checked && basePrice >= 175) ? Math.round(basePrice * 0.1) : 0;
+      let total = basePrice + addons - disc;
+      document.getElementById('sum-service').innerText = serviceName;
+      document.getElementById('sum-addons').innerText = '$' + addons;
+      document.getElementById('sum-discount').innerText = '-$' + disc;
+      document.getElementById('sum-total').innerText = '$' + total;
+      document.getElementById('form-service').value = serviceName;
+      document.getElementById('form-addons').value = names.length ? names.join(', ') : 'None';
+      document.getElementById('form-discount').value = disc > 0 ? 'Yes (-$' + disc + ')' : 'No';
+      document.getElementById('form-total').value = '$' + total;
+    }
+  </script>
+</body>
+</html>
+
