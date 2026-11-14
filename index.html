@@ -208,6 +208,31 @@
     </footer>
   </div>
   <script type="module">
+        let basePrice = 85;
+    let tierName = 'Minimum / Single Item (1/8 Truck)';
+
+    window.selectTier = function(btn, name, price, pct, lbs) {
+      document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tierName = name;
+      basePrice = price;
+      document.getElementById('fill-pct').textContent = pct;
+      document.getElementById('divert-lbs').textContent = lbs;
+      document.getElementById('bar-fill').style.width = pct + '%';
+      document.getElementById('sum-tier').textContent = name;
+      window.updateTotal();
+    };
+
+    window.updateTotal = function() {
+      let mods = 0;
+      if (document.getElementById('curbside').checked) mods -= 15;
+      document.querySelectorAll('.addon:checked').forEach(a => mods += parseInt(a.value));
+      const finalTotal = Math.max(50, basePrice + mods);
+      document.getElementById('sum-mods').textContent = (mods >= 0 ? '+$' : '-$') + Math.abs(mods);
+      document.getElementById('sum-total').textContent = '$' + finalTotal;
+    };
+
+
     import { initializeApp } from "https://gstatic.com";
     import { getDatabase, ref, set } from "https://gstatic.com";
 
@@ -224,30 +249,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    let basePrice = 85;
-    let tierName = 'Minimum / Single Item (1/8 Trailer)';
-
-    window.selectTier = function(btn, name, price, pct, lbs) {
-      document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      tierName = name;
-      basePrice = price;
-      document.getElementById('fill-pct').textContent = pct + '%';
-      document.getElementById('divert-lbs').textContent = lbs;
-      document.getElementById('bar-fill').style.width = pct + '%';
-      document.getElementById('sum-tier').textContent = name;
-      window.updateTotal();
-    };
-
-    window.updateTotal = function() {
-      let mods = 0;
-      if (document.getElementById('curbside').checked) mods -= 15;
-      document.querySelectorAll('.addon:checked').forEach(cb => { mods += Number(cb.value); });
-      const finalTotal = Math.max(50, basePrice + mods);
-      document.getElementById('sum-mods').textContent = (mods >= 0 ? '+$' + mods : '-$' + Math.abs(mods));
-      document.getElementById('sum-total').textContent = '$' + finalTotal;
-    };
-
+    
     window.handleBooking = async function(e) {
       e.preventDefault();
       const btn = document.querySelector('.submit-btn');
