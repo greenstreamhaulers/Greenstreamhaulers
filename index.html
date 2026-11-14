@@ -208,6 +208,9 @@
     </footer>
   </div>
   <script type="module">
+    import { initializeApp } from "https://gstatic.com";
+    import { getDatabase, ref, set } from "https://gstatic.com";
+
         let basePrice = 85;
     let tierName = 'Minimum / Single Item (1/8 Truck)';
 
@@ -222,7 +225,6 @@
       document.getElementById('sum-tier').textContent = name;
       window.updateTotal();
     };
-
     window.updateTotal = function() {
       let mods = 0;
       if (document.getElementById('curbside').checked) mods -= 15;
@@ -231,10 +233,8 @@
       document.getElementById('sum-mods').textContent = (mods >= 0 ? '+$' : '-$') + Math.abs(mods);
       document.getElementById('sum-total').textContent = '$' + finalTotal;
     };
-
-
-    import { initializeApp } from "https://gstatic.com";
-    import { getDatabase, ref, set } from "https://gstatic.com";
+    authDomain: "://firebaseapp.com",
+    databaseURL: "https://firebaseio.com",
 
     const firebaseConfig = {
       apiKey: "AIzaSyA5EnfM-945oA5W_gkYgDDMNm50w220z2I",
