@@ -1,0 +1,6 @@
+{
+  "name": "greenstreamhaulers-backend",
+  "dependencies": {
+    "resend": "^4.0.0"
+  }
+}
