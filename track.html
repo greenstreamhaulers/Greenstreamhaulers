@@ -1,22 +1,118 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Order Tracking | Green Stream Haulers</title>
+  <link rel="stylesheet" href="https://unpkg.com" />
+  <script src="https://unpkg.com"></script>
+  <style>
+    :root { --neon: #52ff00; --bg: #0a0c0a; --card: #131713; --border: #263026; }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { margin: 0; background: var(--bg); color: #f1f5f9; }
+    header { background: #131713; border-bottom: 2px solid rgba(82,255,0,0.35); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; text-transform: uppercase; font-style: italic; }
+    .brand img { width: 38px; height: 38px; border-radius: 50%; }
+    .brand span { color: var(--neon); }
+    .wrap { max-width: 680px; margin: 16px auto; padding: 0 16px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; text-align: center; }
+    .status-pill { display: inline-block; padding: 5px 12px; border-radius: 99px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; background: rgba(82,255,0,0.14); border: 1px solid var(--neon); color: var(--neon); margin-bottom: 10px; }
+    .eta { font-size: 1.7rem; font-weight: 900; color: var(--neon); margin: 6px 0; }
+    .details { font-size: 0.9rem; color: #94a3b8; margin-top: 8px; }
+    #map { height: 62vh; width: 100%; border-radius: 14px; border: 1px solid var(--neon); display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="Logo-circle.png.PNG" alt="Logo">
+      <div>Green Stream <span>Haulers</span></div>
+    </div>
+    <a href="tel:8126816581" style="color:#52ff00; text-decoration:none; font-weight:700; font-size:0.9rem;">📞 Call Dispatch</a>
+  </header>
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyA5EnfM-945oA5W_gkYgDDMNm50w220z2I",
-  authDomain: "greenstreamhaulers-35d5e.firebaseapp.com",
-  databaseURL: "https://greenstreamhaulers-35d5e-default-rtdb.firebaseio.com",
-  projectId: "greenstreamhaulers-35d5e",
-  storageBucket: "greenstreamhaulers-35d5e.firebasestorage.app",
-  messagingSenderId: "18579064120",
-  appId: "1:18579064120:web:ab8c032607e9a55ded6dcd",
-  measurementId: "G-HS0F5YYGDK"
-};
+  <div class="wrap">
+    <div class="card">
+      <div class="status-pill" id="statusBadge">Checking Order...</div>
+      <div id="headline" style="font-size:1.15rem; font-weight:700;">Looking up your pickup...</div>
+      <div class="eta" id="etaBox"></div>
+      <div class="details" id="orderDetails"></div>
+    </div>
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+    <div id="map"></div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://gstatic.com";
+    import { getDatabase, ref, onValue } from "https://gstatic.com";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA5EnfM-945oA5W_gkYgDDMNm50w220z2I",
+      authDomain: "://firebaseapp.com",
+      databaseURL: "https://firebaseio.com",
+      projectId: "greenstreamhaulers-35d5e",
+      storageBucket: "greenstreamhaulers-35d5e.firebasestorage.app",
+      messagingSenderId: "18579064120",
+      appId: "1:18579064120:web:ab8c032607e9a55ded6dcd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get("job");
+
+    const statusBadge = document.getElementById("statusBadge");
+    const headline = document.getElementById("headline");
+    const etaBox = document.getElementById("etaBox");
+    const orderDetails = document.getElementById("orderDetails");
+    const mapDiv = document.getElementById("map");
+
+    let map = null;
+    let marker = null;
+
+    if (!jobId) {
+      statusBadge.textContent = "No Order Selected";
+      headline.textContent = "Place a pickup order on our homepage to get your live tracking link.";
+    } else {
+      onValue(ref(db, "trips/" + jobId), (snapshot) => {
+        const data = snapshot.val();
+        if (!data) {
+          statusBadge.textContent = `Job #${jobId}`;
+          headline.textContent = "Order not found. Please check your tracking link.";
+          return;
+        }
+
+        orderDetails.innerHTML = `Order #${jobId} • ${data.service || ""}<br>📍 ${data.address || ""}`;
+
+        if (data.status === "pending") {
+          statusBadge.textContent = "Order Confirmed";
+          headline.textContent = "Waiting for driver to confirm route & ETA...";
+          etaBox.textContent = "";
+          mapDiv.style.display = "none";
+        } else if (data.status === "en_route") {
+          statusBadge.textContent = "Driver En Route";
+          headline.textContent = "Your Ford F-250 & 16ft Dump Trailer is on the way!";
+          etaBox.textContent = `ETA: ${data.eta}`;
+          mapDiv.style.display = "block";
+
+          if (!map && data.lat && data.lng) {
+            map = L.map("map").setView([data.lat, data.lng], 15);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+              attribution: "&copy; OpenStreetMap"
+            }).addTo(map);
+            marker = L.marker([data.lat, data.lng]).addTo(map).bindPopup("Green Stream Haulers Truck").openPopup();
+          } else if (map && data.lat && data.lng) {
+            marker.setLatLng([data.lat, data.lng]);
+            map.panTo([data.lat, data.lng]);
+          }
+        } else if (data.status === "arrived") {
+          statusBadge.textContent = "Arrived";
+          headline.textContent = "Your Green Stream Haulers crew has arrived on site!";
+          etaBox.textContent = "";
+          mapDiv.style.display = "none";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
