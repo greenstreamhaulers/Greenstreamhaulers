@@ -273,6 +273,19 @@
           status: 'pending',
           createdAt: Date.now()
         });
+          await fetch("/api/send-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jobId: jobId,
+            name: name,
+            phone: phone,
+            address: addr,
+            service: tierName,
+            total: total,
+            window: time
+          })
+        });
 
         window.location.href = `track.html?job=${jobId}`;
       } catch (err) {
