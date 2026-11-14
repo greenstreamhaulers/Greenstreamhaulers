@@ -73,7 +73,6 @@
       <a href="tel:8126816581" class="call-btn">📞 (812) 681-6581</a>
     </div>
   </header>
-
   <div class="container">
     <div class="hero">
       <div>
@@ -85,7 +84,6 @@
         <img src="Hero-truck.png.PNG" alt="Green Stream Haulers F-250 and 16ft Dump Trailer">
       </div>
     </div>
-
     <div class="card">
       <h2>1. Choose Load Size or DIY Rental</h2>
       <p class="sub">Tap a load tier below to see your instant Bloomington price.</p>
@@ -107,7 +105,6 @@
         </button>
         <button type="button" class="tier-btn" onclick="selectTier(this, 'Full 16ft Trailer Load', 495, 100, '2,000 lbs')">
           <span class="tier-title">Full 16ft Trailer</span>
-```html
     <div class="card">
       <h2>2. Discount & Heavy-Item Add-Ons</h2>
       <p class="sub">Check any applicable discounts or specialty items.</p>
@@ -122,23 +119,18 @@
         <label class="addon-item"><input type="checkbox" class="addon" data-name="Tire Disposal" value="15" onchange="updateTotal()"> Tire (+$15)</label>
       </div>
     </div>
-
     <div class="card">
       <h2>3. Snap a Photo & Lock In Your Pickup</h2>
       <p class="sub">No payment due until we arrive and confirm your load size.</p>
       <form onsubmit="handleBooking(event)">
         <label class="field-label">Upload Junk Pile Photo (Optional)</label>
         <input type="file" accept="image/*" capture="environment">
-
         <label class="field-label">Your Name *</label>
         <input type="text" id="cust-name" required placeholder="Full Name">
-
         <label class="field-label">Phone Number *</label>
         <input type="tel" id="cust-phone" required placeholder="(812) 555-0199">
-
         <label class="field-label">Bloomington / Monroe County Address *</label>
         <input type="text" id="cust-addr" required placeholder="Street Address or Neighborhood">
-
         <label class="field-label">Preferred Pickup Window</label>
         <select id="cust-time">
           <option>Today / Same-Day Dispatch</option>
@@ -146,23 +138,19 @@
           <option>Tomorrow Afternoon (12 PM – 5 PM)</option>
           <option>This Weekend</option>
         </select>
-
         <div class="summary-box">
           <div class="summary-line"><span>Selected Service:</span><strong id="sum-tier">Minimum / Single Item (1/8 Trailer)</strong></div>
           <div class="summary-line"><span>Add-Ons & Discounts:</span><span id="sum-mods">$0</span></div>
           <div class="summary-total"><span>Estimated Total:</span><span id="sum-total">$85</span></div>
         </div>
-
         <button type="submit" class="submit-btn">Lock In My Pickup →</button>
         <div class="pay-badges">Pay on-site via Cash, Card, Venmo, CashApp, or Zelle</div>
       </form>
-
       <div class="action-split">
         <a href="sms:8126816581?&body=Hi%20Green%20Stream%20Haulers!%20I%27d%20like%20a%20quote%20for%20a%20pickup%20in%20Bloomington." class="sms-btn">💬 Text a Photo</a>
         <a href="tel:8126816581" class="sms-btn">📞 Call (812) 681-6581</a>
       </div>
     </div>
-
     <div class="card warn-card">
       <h2 style="color:#f87171;">⚠️ Items We Cannot Haul</h2>
       <ul class="warn-list">
@@ -170,7 +158,6 @@
         <li>Asbestos, medical/biohazard waste, or pressurized tanks</li>
       </ul>
     </div>
-
     <div class="card">
       <h2>Local Bloomington Reviews</h2>
       <div class="review">
@@ -184,16 +171,13 @@
         <p style="margin:4px 0 0; color:#cbd5e1;">"Rented the 16ft dump trailer for 24 hours during our remodel. Dropped it right where we needed it and hauled everything off on time!"</p>
       </div>
     </div>
-
     <footer>
       &copy; 2026 Green Stream Haulers • Serving Bloomington, Ellettsville & Monroe County, IN • (812) 681-6581
     </footer>
   </div>
-
   <script type="module">
     import { initializeApp } from "https://gstatic.com";
     import { getDatabase, ref, set } from "https://gstatic.com";
-
     const firebaseConfig = {
       apiKey: "AIzaSyA5EnfM-945oA5W_gkYgDDMNm50w220z2I",
       authDomain: "://firebaseapp.com",
@@ -202,14 +186,10 @@
       storageBucket: "greenstreamhaulers-35d5e.firebasestorage.app",
       messagingSenderId: "18579064120",
       appId: "1:18579064120:web:ab8c032607e9a55ded6dcd"
-    };
-
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-
     let basePrice = 85;
     let tierName = 'Minimum / Single Item (1/8 Trailer)';
-
     window.selectTier = function(btn, name, price, pct, lbs) {
       document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -220,8 +200,6 @@
       document.getElementById('bar-fill').style.width = pct + '%';
       document.getElementById('sum-tier').textContent = name;
       window.updateTotal();
-    };
-
     window.updateTotal = function() {
       let mods = 0;
       if (document.getElementById('curbside').checked) mods -= 15;
@@ -229,21 +207,17 @@
       const finalTotal = Math.max(50, basePrice + mods);
       document.getElementById('sum-mods').textContent = (mods >= 0 ? '+$' + mods : '-$' + Math.abs(mods));
       document.getElementById('sum-total').textContent = '$' + finalTotal;
-    };
-
     window.handleBooking = async function(e) {
       e.preventDefault();
       const btn = document.querySelector('.submit-btn');
       btn.textContent = 'Locking In Your Pickup...';
       btn.disabled = true;
-
       const name = document.getElementById('cust-name').value.trim();
       const phone = document.getElementById('cust-phone').value.trim();
       const addr = document.getElementById('cust-addr').value.trim();
       const time = document.getElementById('cust-time').value;
       const total = document.getElementById('sum-total').textContent;
       const jobId = Math.floor(1000 + Math.random() * 9000).toString();
-
       try {
         await set(ref(db, 'trips/' + jobId), {
           jobId: jobId,
@@ -255,15 +229,11 @@
           window: time,
           status: 'pending',
           createdAt: Date.now()
-        });
-
         window.location.href = `track.html?job=${jobId}`;
       } catch (err) {
         alert('Error saving booking: ' + err.message);
         btn.textContent = 'Lock In My Pickup →';
         btn.disabled = false;
-      }
-    };
   </script>
 </body>
 </html>
