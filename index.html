@@ -208,94 +208,42 @@
     </footer>
   </div>
   <script type="module">
-    import { initializeApp } from "https://gstatic.com";
-    import { getDatabase, ref, set } from "https://gstatic.com";
-
-        let basePrice = 85;
-    let tierName = 'Minimum / Single Item (1/8 Truck)';
-
-    window.selectTier = function(btn, name, price, pct, lbs) {
-      document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      tierName = name;
-      basePrice = price;
-      document.getElementById('fill-pct').textContent = pct;
-      document.getElementById('divert-lbs').textContent = lbs;
-      document.getElementById('bar-fill').style.width = pct + '%';
-      document.getElementById('sum-tier').textContent = name;
-      window.updateTotal();
-    };
-    window.updateTotal = function() {
-      let mods = 0;
-      if (document.getElementById('curbside').checked) mods -= 15;
-      document.querySelectorAll('.addon:checked').forEach(a => mods += parseInt(a.value));
-      const finalTotal = Math.max(50, basePrice + mods);
-      document.getElementById('sum-mods').textContent = (mods >= 0 ? '+$' : '-$') + Math.abs(mods);
-      document.getElementById('sum-total').textContent = '$' + finalTotal;
-    };
-    authDomain: "://firebaseapp.com",
-    databaseURL: "https://firebaseio.com",
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyA5EnfM-945oA5W_gkYgDDMNm50w220z2I",
-             authDomain: "://firebaseapp.com",
-    databaseURL: "https://firebaseio.com",
-      projectId: "greenstreamhaulers-35d5e",
-      storageBucket: "greenstreamhaulers-35d5e.firebasestorage.app",
-      messagingSenderId: "18579064120",
-      appId: "1:18579064120:web:ab8c032607e9a55ded6dcd"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    
     window.handleBooking = async function(e) {
-      e.preventDefault();
-      const btn = document.querySelector('.submit-btn');
-      btn.textContent = 'Locking In Your Pickup...';
-      btn.disabled = true;
+  e.preventDefault();
+  const btn = document.querySelector('.submit-btn');
+  const originalText = btn.textContent;
+  btn.textContent = 'Sending Your Request...';
+  btn.disabled = true;
 
-      const name = document.getElementById('cust-name').value.trim();
-      const phone = document.getElementById('cust-phone').value.trim();
-      const addr = document.getElementById('cust-addr').value.trim();
-      const time = document.getElementById('cust-time').value;
-      const total = document.getElementById('sum-total').textContent;
-      const jobId = Math.floor(1000 + Math.random() * 9000).toString();
+  const orderData = {
+    name: document.getElementById('cust-name').value.trim(),
+    phone: document.getElementById('cust-phone').value.trim(),
+    address: document.getElementById('cust-addr').value.trim(),
+    time: document.getElementById('cust-time').value,
+    total: document.getElementById('sum-total').textContent,
+    jobId: Math.floor(1000 + Math.random() * 9000).toString()
+  };
 
-      try {
-        await set(ref(db, 'trips/' + jobId), {
-          jobId: jobId,
-          customerName: name,
-          customerPhone: phone,
-          address: addr,
-          service: tierName,
-          total: total,
-          window: time,
-          status: 'pending',
-          createdAt: Date.now()
-        });
-          await fetch("/api/send-order", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            jobId: jobId,
-            name: name,
-            phone: phone,
-            address: addr,
-            service: tierName,
-            total: total,
-            window: time
-          })
-        });
+  try {
+    const response = await fetch('/api/send-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
 
-        window.location.href = `track.html?job=${jobId}`;
-      } catch (err) {
-        alert('Error saving booking: ' + err.message);
-        btn.textContent = 'Lock In My Pickup →';
-        btn.disabled = false;
-      }
-    };
-  </script>
-</body>
-</html>
+    if (response.ok) {
+      alert('Request sent! Your confirmation ID is #' + orderData.jobId);
+      e.target.reset();
+    } else {
+      const err = await response.json();
+      alert('Could not send request: ' + (err.error || 'Server error'));
+    }
+  } catch (error) {
+    alert('Network error. Please try again.');
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+};
+
+   
