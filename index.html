@@ -6,61 +6,62 @@
   <title>Green Stream Haulers | Bloomington, IN Junk Removal & 16ft Dump Trailer</title>
   <link href="https://googleapis.com" rel="stylesheet">
   <style>
-    :root { --neon-green: #52ff00; --green-mid: #2eb800; --bg-black: #0a0c0a; --card-dark: #131713; --card-elevated: #1a201a; --text-light: #f1f5f9; --muted: #94a3b8; --border: #263026; }
+    :root { --neon: #52ff00; --mid: #2eb800; --bg: #0a0c0a; --card: #131713; --elev: #1a201a; --text: #f8fafc; --muted: #a1a1aa; --border: #2a362a; }
     * { box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
-    body { margin: 0; background: var(--bg-black); color: var(--text-light); line-height: 1.5; }
+    body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; font-size: 16px; }
     h1, h2, .brand-title { font-family: 'Chakra Petch', sans-serif; text-transform: uppercase; font-style: italic; }
-    header { background: rgba(10, 12, 10, 0.94); backdrop-filter: blur(10px); border-bottom: 2px solid rgba(82, 255, 0, 0.35); padding: 10px 16px; position: sticky; top: 0; z-index: 50; }
-    .top-bar { max-width: 820px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    header { background: rgba(10, 12, 10, 0.96); border-bottom: 2px solid rgba(82, 255, 0, 0.4); padding: 12px 16px; position: sticky; top: 0; z-index: 50; }
+    .top-bar { max-width: 780px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
     .brand-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; }
-    .brand-wrap img { width: 46px; height: 46px; border-radius: 50%; box-shadow: 0 0 12px rgba(82, 255, 0, 0.5); }
-    .brand-title { font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; line-height: 1.1; }
-    .brand-title span { color: var(--neon-green); display: block; font-size: 0.95rem; }
-    .call-btn { background: linear-gradient(135deg, var(--neon-green), var(--green-mid)); color: #050805; text-decoration: none; padding: 9px 14px; border-radius: 8px; font-weight: 800; font-size: 0.92rem; white-space: nowrap; box-shadow: 0 0 15px rgba(82, 255, 0, 0.4); }
-    .container { max-width: 820px; margin: 0 auto; padding: 16px; }
-    .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; align-items: center; background: linear-gradient(145deg, #151c15, #0c0f0c); border: 1px solid rgba(82, 255, 0, 0.4); border-radius: 16px; padding: 20px; margin-bottom: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 25px rgba(82, 255, 0, 0.12); }
-    .badge { display: inline-block; background: rgba(82, 255, 0, 0.14); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 4px 10px; border-radius: 99px; font-size: 0.78rem; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
-    .hero h1 { margin: 0 0 8px; font-size: 1.85rem; line-height: 1.1; color: #fff; }
-    .hero h1 span { color: var(--neon-green); }
-    .hero p { margin: 0; color: var(--muted); font-size: 0.95rem; }
-    .hero-img-box { border-radius: 12px; padding: 4px; background: linear-gradient(145deg, var(--neon-green), #122b08); }
-    .hero-img-box img { width: 100%; max-height: 270px; object-fit: cover; border-radius: 9px; display: block; }
-    .card { background: var(--card-dark); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-    h2 { margin: 0 0 4px; font-size: 1.3rem; color: var(--neon-green); letter-spacing: 0.5px; }
-    .sub { margin: 0 0 14px; font-size: 0.9rem; color: var(--muted); }
-    .tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; }
-    .tier-btn { border: 2px solid var(--border); background: var(--card-elevated); color: var(--text-light); border-radius: 10px; padding: 12px 10px; text-align: left; cursor: pointer; transition: 0.15s; }
-    .tier-btn.active { border-color: var(--neon-green); background: rgba(82, 255, 0, 0.12); box-shadow: 0 0 15px rgba(82, 255, 0, 0.2); }
-    .tier-title { font-weight: 700; font-size: 0.92rem; display: block; color: #fff; }
-    .tier-price { font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--neon-green); display: block; margin-top: 4px; }
-    .tier-desc { font-size: 0.78rem; color: var(--muted); display: block; margin-top: 2px; }
-    .trailer-box { background: #0c0f0c; border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 14px; }
-    .bar-bg { background: #1e261e; height: 16px; border-radius: 99px; overflow: hidden; margin: 8px 0; border: 1px solid #2e3b2e; }
-    .bar-fill { background: linear-gradient(90deg, var(--green-mid), var(--neon-green)); height: 100%; width: 15%; transition: width 0.3s ease; box-shadow: 0 0 10px var(--neon-green); }
-    .eco-note { font-size: 0.86rem; color: #fff; font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
-    .eco-note strong { color: var(--neon-green); }
-    .check-row { display: flex; align-items: center; gap: 10px; padding: 11px; border: 1px solid var(--border); background: var(--card-elevated); border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 600; }
-    .check-row input, .addon-item input { width: 18px; height: 18px; accent-color: var(--neon-green); }
-    .addon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-    .addon-item { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; padding: 10px; border: 1px solid var(--border); background: var(--card-elevated); border-radius: 8px; cursor: pointer; }
-    label.field-label { display: block; font-weight: 700; font-size: 0.9rem; margin: 12px 0 4px; color: #e2e8f0; }
-    input[type="text"], input[type="tel"], input[type="file"], select, textarea { width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 9px; font-size: 1rem; background: #0c0f0c; color: #fff; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--neon-green); }
-    .summary-box { background: rgba(82, 255, 0, 0.08); border: 1px solid var(--neon-green); border-radius: 10px; padding: 14px; margin: 16px 0; }
-    .summary-line { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 4px; color: #e2e8f0; }
-    .summary-total { display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 800; color: var(--neon-green); border-top: 1px solid rgba(82, 255, 0, 0.3); padding-top: 8px; margin-top: 6px; }
-    .submit-btn { width: 100%; background: linear-gradient(135deg, var(--neon-green), var(--green-mid)); color: #050805; border: none; padding: 15px; border-radius: 10px; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; cursor: pointer; box-shadow: 0 0 20px rgba(82, 255, 0, 0.35); }
-    .pay-badges { text-align: center; font-size: 0.82rem; color: var(--muted); margin-top: 10px; }
-    .action-split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-    .sms-btn { display: block; text-align: center; background: var(--card-elevated); border: 1px solid var(--border); color: #fff; text-decoration: none; padding: 11px; border-radius: 9px; font-weight: 700; font-size: 0.92rem; }
-    .sms-btn:hover { border-color: var(--neon-green); color: var(--neon-green); }
+    .brand-wrap img { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--neon); }
+    .brand-title { font-weight: 700; font-size: 1.15rem; line-height: 1.1; }
+    .brand-title span { color: var(--neon); display: block; font-size: 0.92rem; }
+    .call-btn { background: linear-gradient(135deg, var(--neon), var(--mid)); color: #050805; text-decoration: none; padding: 10px 14px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; white-space: nowrap; }
+    .container { max-width: 780px; margin: 0 auto; padding: 16px; }
+    .hero { display: flex; flex-direction: column; gap: 16px; background: linear-gradient(145deg, #151c15, #0c0f0c); border: 1px solid rgba(82, 255, 0, 0.45); border-radius: 16px; padding: 20px; margin-bottom: 18px; }
+    .badge { display: inline-block; background: rgba(82, 255, 0, 0.14); border: 1px solid var(--neon); color: var(--neon); padding: 5px 12px; border-radius: 99px; font-size: 0.78rem; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; }
+    .hero h1 { margin: 0 0 8px; font-size: 1.75rem; line-height: 1.15; color: #fff; }
+    .hero h1 span { color: var(--neon); }
+    .hero p { margin: 0; color: #cbd5e1; font-size: 0.98rem; }
+    .hero-img-box { border-radius: 12px; padding: 4px; background: linear-gradient(145deg, var(--neon), #122b08); }
+    .hero-img-box img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 9px; display: block; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 18px; }
+    h2 { margin: 0 0 6px; font-size: 1.3rem; color: var(--neon); letter-spacing: 0.5px; }
+    .sub { margin: 0 0 16px; font-size: 0.95rem; color: var(--muted); }
+    .tier-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .tier-btn { border: 2px solid var(--border); background: var(--elev); color: var(--text); border-radius: 12px; padding: 14px 12px; text-align: left; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
+    .tier-btn.active { border-color: var(--neon); background: rgba(82, 255, 0, 0.12); box-shadow: 0 0 14px rgba(82, 255, 0, 0.2); }
+    .tier-btn.full-span { grid-column: span 2; }
+    .tier-title { font-weight: 700; font-size: 0.98rem; color: #fff; }
+    .tier-price { font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--neon); margin: 4px 0; }
+    .tier-desc { font-size: 0.82rem; color: #cbd5e1; }
+    .trailer-box { background: #0c0f0c; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-top: 16px; }
+    .bar-bg { background: #1e261e; height: 14px; border-radius: 99px; overflow: hidden; margin: 8px 0; }
+    .bar-fill { background: linear-gradient(90deg, var(--mid), var(--neon)); height: 100%; width: 15%; transition: width 0.3s ease; }
+    .eco-note { font-size: 0.88rem; color: #fff; font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+    .eco-note strong { color: var(--neon); }
+    .check-row { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--border); background: var(--elev); border-radius: 10px; margin-bottom: 10px; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
+    .check-row input, .addon-item input { width: 20px; height: 20px; accent-color: var(--neon); flex-shrink: 0; }
+    .addon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .addon-item { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; padding: 12px; border: 1px solid var(--border); background: var(--elev); border-radius: 10px; cursor: pointer; }
+    label.field-label { display: block; font-weight: 700; font-size: 0.95rem; margin: 14px 0 6px; color: #f1f5f9; }
+    input[type="text"], input[type="tel"], input[type="file"], select { width: 100%; padding: 13px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; background: #0c0f0c; color: #fff; }
+    input:focus, select:focus { outline: none; border-color: var(--neon); }
+    .summary-box { background: rgba(82, 255, 0, 0.08); border: 1px solid var(--neon); border-radius: 12px; padding: 16px; margin: 18px 0; }
+    .summary-line { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 6px; color: #e2e8f0; gap: 10px; }
+    .summary-total { display: flex; justify-content: space-between; font-size: 1.35rem; font-weight: 800; color: var(--neon); border-top: 1px solid rgba(82, 255, 0, 0.3); padding-top: 10px; margin-top: 8px; }
+    .submit-btn { width: 100%; background: linear-gradient(135deg, var(--neon), var(--mid)); color: #050805; border: none; padding: 16px; border-radius: 10px; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+    .pay-badges { text-align: center; font-size: 0.85rem; color: var(--muted); margin-top: 10px; }
+    .action-split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .sms-btn { display: block; text-align: center; background: var(--elev); border: 1px solid var(--border); color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; }
     .warn-card { border-color: #7f1d1d; background: #1a0f0f; }
-    .warn-list { margin: 8px 0 0; padding-left: 18px; font-size: 0.88rem; color: #fca5a5; }
-    .review { border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px; font-size: 0.92rem; }
+    .warn-list { margin: 8px 0 0; padding-left: 18px; font-size: 0.92rem; color: #fca5a5; line-height: 1.6; }
+    .review { border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 12px; font-size: 0.95rem; }
     .review:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .stars { color: var(--neon-green); font-weight: 700; }
-    footer { text-align: center; padding: 20px 16px 40px; font-size: 0.85rem; color: var(--muted); }
-    @media (max-width: 650px) { .hero { grid-template-columns: 1fr; text-align: center; } .addon-grid { grid-template-columns: 1fr; } }
+    .stars { color: var(--neon); font-weight: 700; }
+    footer { text-align: center; padding: 20px 16px 40px; font-size: 0.88rem; color: var(--muted); }
+    @media (min-width: 650px) { .hero { flex-direction: row; align-items: center; } .tier-grid { grid-template-columns: repeat(3, 1fr); } .tier-btn.full-span { grid-column: span 1; } }
+    @media (max-width: 480px) { .addon-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -73,6 +74,7 @@
       <a href="tel:8126816581" class="call-btn">📞 (812) 681-6581</a>
     </div>
   </header>
+
   <div class="container">
     <div class="hero">
       <div>
@@ -84,6 +86,7 @@
         <img src="Hero-truck.png.PNG" alt="Green Stream Haulers F-250 and 16ft Dump Trailer">
       </div>
     </div>
+
     <div class="card">
       <h2>1. Choose Load Size or DIY Rental</h2>
       <p class="sub">Tap a load tier below to see your instant Bloomington price.</p>
@@ -105,6 +108,24 @@
         </button>
         <button type="button" class="tier-btn" onclick="selectTier(this, 'Full 16ft Trailer Load', 495, 100, '2,000 lbs')">
           <span class="tier-title">Full 16ft Trailer</span>
+          <span class="tier-price">$495</span>
+          <span class="tier-desc">Whole estate or big remodel</span>
+        </button>
+        <button type="button" class="tier-btn full-span" onclick="selectTier(this, 'DIY 16ft Dump Trailer Rental (24hr)', 325, 100, '1,500 lbs')">
+          <span class="tier-title">DIY 24hr Dump Trailer Rental</span>
+          <span class="tier-price">$325</span>
+          <span class="tier-desc">We drop off, you load, we haul away</span>
+        </button>
+      </div>
+      <div class="trailer-box">
+        <div class="eco-note">
+          <span>16ft Trailer Fill: <strong id="fill-pct">15%</strong></span>
+          <span>♻ Est. Diversion: <strong id="divert-lbs">250 lbs</strong></span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" id="bar-fill"></div></div>
+        <div style="font-size:0.84rem; color:#cbd5e1;">Local Eco-Partners: <strong style="color:#fff;">Habitat ReStore & Hoosier to Hoosier</strong></div>
+      </div>
+    </div>
     <div class="card">
       <h2>2. Discount & Heavy-Item Add-Ons</h2>
       <p class="sub">Check any applicable discounts or specialty items.</p>
@@ -119,18 +140,23 @@
         <label class="addon-item"><input type="checkbox" class="addon" data-name="Tire Disposal" value="15" onchange="updateTotal()"> Tire (+$15)</label>
       </div>
     </div>
+
     <div class="card">
-      <h2>3. Snap a Photo & Lock In Your Pickup</h2>
+      <h2>3. Lock In Your Pickup</h2>
       <p class="sub">No payment due until we arrive and confirm your load size.</p>
       <form onsubmit="handleBooking(event)">
         <label class="field-label">Upload Junk Pile Photo (Optional)</label>
         <input type="file" accept="image/*" capture="environment">
+
         <label class="field-label">Your Name *</label>
         <input type="text" id="cust-name" required placeholder="Full Name">
+
         <label class="field-label">Phone Number *</label>
         <input type="tel" id="cust-phone" required placeholder="(812) 555-0199">
+
         <label class="field-label">Bloomington / Monroe County Address *</label>
         <input type="text" id="cust-addr" required placeholder="Street Address or Neighborhood">
+
         <label class="field-label">Preferred Pickup Window</label>
         <select id="cust-time">
           <option>Today / Same-Day Dispatch</option>
@@ -138,19 +164,23 @@
           <option>Tomorrow Afternoon (12 PM – 5 PM)</option>
           <option>This Weekend</option>
         </select>
+
         <div class="summary-box">
           <div class="summary-line"><span>Selected Service:</span><strong id="sum-tier">Minimum / Single Item (1/8 Trailer)</strong></div>
           <div class="summary-line"><span>Add-Ons & Discounts:</span><span id="sum-mods">$0</span></div>
           <div class="summary-total"><span>Estimated Total:</span><span id="sum-total">$85</span></div>
         </div>
+
         <button type="submit" class="submit-btn">Lock In My Pickup →</button>
         <div class="pay-badges">Pay on-site via Cash, Card, Venmo, CashApp, or Zelle</div>
       </form>
+
       <div class="action-split">
         <a href="sms:8126816581?&body=Hi%20Green%20Stream%20Haulers!%20I%27d%20like%20a%20quote%20for%20a%20pickup%20in%20Bloomington." class="sms-btn">💬 Text a Photo</a>
         <a href="tel:8126816581" class="sms-btn">📞 Call (812) 681-6581</a>
       </div>
     </div>
+
     <div class="card warn-card">
       <h2 style="color:#f87171;">⚠️ Items We Cannot Haul</h2>
       <ul class="warn-list">
@@ -158,6 +188,7 @@
         <li>Asbestos, medical/biohazard waste, or pressurized tanks</li>
       </ul>
     </div>
+
     <div class="card">
       <h2>Local Bloomington Reviews</h2>
       <div class="review">
@@ -171,6 +202,7 @@
         <p style="margin:4px 0 0; color:#cbd5e1;">"Rented the 16ft dump trailer for 24 hours during our remodel. Dropped it right where we needed it and hauled everything off on time!"</p>
       </div>
     </div>
+
     <footer>
       &copy; 2026 Green Stream Haulers • Serving Bloomington, Ellettsville & Monroe County, IN • (812) 681-6581
     </footer>
@@ -178,6 +210,7 @@
   <script type="module">
     import { initializeApp } from "https://gstatic.com";
     import { getDatabase, ref, set } from "https://gstatic.com";
+
     const firebaseConfig = {
       apiKey: "AIzaSyA5EnfM-945oA5W_gkYgDDMNm50w220z2I",
       authDomain: "://firebaseapp.com",
@@ -186,10 +219,14 @@
       storageBucket: "greenstreamhaulers-35d5e.firebasestorage.app",
       messagingSenderId: "18579064120",
       appId: "1:18579064120:web:ab8c032607e9a55ded6dcd"
+    };
+
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+
     let basePrice = 85;
     let tierName = 'Minimum / Single Item (1/8 Trailer)';
+
     window.selectTier = function(btn, name, price, pct, lbs) {
       document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -200,6 +237,8 @@
       document.getElementById('bar-fill').style.width = pct + '%';
       document.getElementById('sum-tier').textContent = name;
       window.updateTotal();
+    };
+
     window.updateTotal = function() {
       let mods = 0;
       if (document.getElementById('curbside').checked) mods -= 15;
@@ -207,17 +246,21 @@
       const finalTotal = Math.max(50, basePrice + mods);
       document.getElementById('sum-mods').textContent = (mods >= 0 ? '+$' + mods : '-$' + Math.abs(mods));
       document.getElementById('sum-total').textContent = '$' + finalTotal;
+    };
+
     window.handleBooking = async function(e) {
       e.preventDefault();
       const btn = document.querySelector('.submit-btn');
       btn.textContent = 'Locking In Your Pickup...';
       btn.disabled = true;
+
       const name = document.getElementById('cust-name').value.trim();
       const phone = document.getElementById('cust-phone').value.trim();
       const addr = document.getElementById('cust-addr').value.trim();
       const time = document.getElementById('cust-time').value;
       const total = document.getElementById('sum-total').textContent;
       const jobId = Math.floor(1000 + Math.random() * 9000).toString();
+
       try {
         await set(ref(db, 'trips/' + jobId), {
           jobId: jobId,
@@ -229,11 +272,15 @@
           window: time,
           status: 'pending',
           createdAt: Date.now()
+        });
+
         window.location.href = `track.html?job=${jobId}`;
       } catch (err) {
         alert('Error saving booking: ' + err.message);
         btn.textContent = 'Lock In My Pickup →';
         btn.disabled = false;
+      }
+    };
   </script>
 </body>
 </html>
