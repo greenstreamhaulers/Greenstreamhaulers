@@ -216,12 +216,13 @@
   btn.disabled = true;
 
   const orderData = {
+    jobId: Math.floor(1000 + Math.random() * 9000).toString(),
     name: document.getElementById('cust-name').value.trim(),
     phone: document.getElementById('cust-phone').value.trim(),
     address: document.getElementById('cust-addr').value.trim(),
-    time: document.getElementById('cust-time').value,
+    service: document.getElementById('sum-service')?.textContent || 'Standard Load',
     total: document.getElementById('sum-total').textContent,
-    jobId: Math.floor(1000 + Math.random() * 9000).toString()
+    window: document.getElementById('cust-time').value
   };
 
   try {
@@ -232,18 +233,18 @@
     });
 
     if (response.ok) {
-      alert('Request sent! Your confirmation ID is #' + orderData.jobId);
+      alert('Booking confirmed! Your Job ID is #' + orderData.jobId);
       e.target.reset();
     } else {
       const err = await response.json();
-      alert('Could not send request: ' + (err.error || 'Server error'));
+      alert('Error sending booking: ' + (err.error || 'Please try again.'));
     }
   } catch (error) {
-    alert('Network error. Please try again.');
+    alert('Network error. Please check your connection and try again.');
   } finally {
     btn.textContent = originalText;
     btn.disabled = false;
   }
 };
 
-   
+ 
