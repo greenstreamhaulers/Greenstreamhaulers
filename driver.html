@@ -1,22 +1,147 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driver Dispatch | Green Stream Haulers</title>
+  <style>
+    :root { --neon: #52ff00; --mid: #2eb800; --bg: #0a0c0a; --card: #131713; --elev: #1a201a; --border: #263026; }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { margin: 0; background: var(--bg); color: #f1f5f9; padding: 16px; max-width: 540px; margin: auto; }
+    header { display: flex; align-items: center; gap: 10px; border-bottom: 2px solid rgba(82,255,0,0.35); padding-bottom: 12px; margin-bottom: 16px; }
+    header img { width: 42px; height: 42px; border-radius: 50%; }
+    h1 { margin: 0; font-size: 1.25rem; text-transform: uppercase; font-style: italic; }
+    h1 span { color: var(--neon); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+    h2 { margin: 0 0 10px; font-size: 1.05rem; color: var(--neon); text-transform: uppercase; }
+    .job-item { background: var(--elev); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 10px; cursor: pointer; }
+    .job-item.selected { border-color: var(--neon); background: rgba(82,255,0,0.1); }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 99px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+    .badge.pending { background: rgba(250,204,21,0.15); color: #facc15; border: 1px solid #facc15; }
+    .badge.en_route { background: rgba(82,255,0,0.15); color: var(--neon); border: 1px solid var(--neon); }
+    input { width: 100%; padding: 12px; border-radius: 9px; border: 1px solid var(--border); background: #0c0f0c; color: #fff; font-size: 1rem; margin: 8px 0 12px; }
+    button { width: 100%; padding: 14px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 800; text-transform: uppercase; cursor: pointer; margin-bottom: 8px; }
+    .btn-go { background: linear-gradient(135deg, var(--neon), var(--mid)); color: #050805; }
+    .btn-stop { background: #dc2626; color: #fff; display: none; }
+    #gpsStatus { font-size: 0.88rem; color: #94a3b8; background: #0c0f0c; padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="Logo-circle.png.PNG" alt="Logo">
+    <h1>Green Stream <span>Driver Dispatch</span></h1>
+  </header>
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyA5EnfM-945oA5W_gkYgDDMNm50w220z2I",
-  authDomain: "greenstreamhaulers-35d5e.firebaseapp.com",
-  databaseURL: "https://greenstreamhaulers-35d5e-default-rtdb.firebaseio.com",
-  projectId: "greenstreamhaulers-35d5e",
-  storageBucket: "greenstreamhaulers-35d5e.firebasestorage.app",
-  messagingSenderId: "18579064120",
-  appId: "1:18579064120:web:ab8c032607e9a55ded6dcd",
-  measurementId: "G-HS0F5YYGDK"
-};
+  <div class="card">
+    <h2>1. Tap Active Customer Order</h2>
+    <div id="ordersList" style="font-size:0.9rem; color:#94a3b8;">Loading orders...</div>
+  </div>
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+  <div class="card">
+    <h2>2. Confirm Route & Start Live GPS</h2>
+    <label style="font-size:0.85rem; font-weight:700;">Selected Job ID</label>
+    <input type="text" id="jobId" placeholder="Tap an order above or type ID" />
+
+    <label style="font-size:0.85rem; font-weight:700;">Estimated Arrival (ETA)</label>
+    <input type="text" id="etaInput" placeholder="e.g. 20 mins or 2:45 PM" />
+
+    <button class="btn-go" id="startBtn">Confirm En Route & Stream GPS →</button>
+    <button class="btn-stop" id="stopBtn">Mark Arrived / Stop Tracking</button>
+    <div id="gpsStatus">Status: Ready for dispatch</div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://gstatic.com";
+    import { getDatabase, ref, onValue, update } from "https://gstatic.com";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA5EnfM-945oA5W_gkYgDDMNm50w220z2I",
+      authDomain: "://firebaseapp.com",
+      databaseURL: "https://firebaseio.com",
+      projectId: "greenstreamhaulers-35d5e",
+      storageBucket: "greenstreamhaulers-35d5e.firebasestorage.app",
+      messagingSenderId: "18579064120",
+      appId: "1:18579064120:web:ab8c032607e9a55ded6dcd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let watchId = null;
+    const ordersList = document.getElementById("ordersList");
+    const jobIdInput = document.getElementById("jobId");
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const gpsStatus = document.getElementById("gpsStatus");
+
+    onValue(ref(db, "trips"), (snapshot) => {
+      const trips = snapshot.val();
+      ordersList.innerHTML = "";
+      if (!trips) {
+        ordersList.textContent = "No orders yet. Place a test order on index.html!";
+        return;
+      }
+      const activeKeys = Object.keys(trips).reverse().filter(k => trips[k].status !== "arrived");
+      if (activeKeys.length === 0) {
+        ordersList.textContent = "All current orders completed!";
+        return;
+      }
+      activeKeys.forEach((id) => {
+        const t = trips[id];
+        const div = document.createElement("div");
+        div.className = "job-item" + (jobIdInput.value === id ? " selected" : "");
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong style="color:#fff;">#${id} — ${t.customerName || "Customer"}</strong>
+            <span class="badge ${t.status}">${t.status === "en_route" ? "En Route" : "Pending"}</span>
+          </div>
+          <div style="font-size:0.85rem; color:#cbd5e1; margin-top:4px;">📍 ${t.address || "Bloomington, IN"}</div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-top:2px;">${t.service || ""} • ${t.total || ""} • ${t.window || ""}</div>
+        `;
+        div.onclick = () => {
+          document.querySelectorAll(".job-item").forEach(el => el.classList.remove("selected"));
+          div.classList.add("selected");
+          jobIdInput.value = id;
+        };
+        ordersList.appendChild(div);
+      });
+    });
+
+    startBtn.onclick = () => {
+      const jobId = jobIdInput.value.trim();
+      const eta = document.getElementById("etaInput").value.trim();
+      if (!jobId || !eta) return alert("Select an order (or enter a Job ID) and enter an ETA first.");
+      if (!navigator.geolocation) return alert("GPS not supported on this device.");
+
+      startBtn.style.display = "none";
+      stopBtn.style.display = "block";
+      gpsStatus.textContent = "Starting GPS stream...";
+
+      watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          update(ref(db, "trips/" + jobId), {
+            status: "en_route",
+            eta: eta,
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            updatedAt: Date.now()
+          });
+          gpsStatus.innerHTML = `<strong style="color:#52ff00;">LIVE TRACKING ACTIVE (Job #${jobId})</strong><br>ETA: ${eta}<br>GPS: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+        },
+        (err) => {
+          gpsStatus.textContent = "GPS Error: " + err.message;
+        },
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+      );
+    };
+
+    stopBtn.onclick = () => {
+      const jobId = jobIdInput.value.trim();
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      if (jobId) update(ref(db, "trips/" + jobId), { status: "arrived" });
+      gpsStatus.textContent = `Job #${jobId} marked Arrived. GPS stopped.`;
+      startBtn.style.display = "block";
+      stopBtn.style.display = "none";
+    };
+  </script>
+</body>
+</html>
