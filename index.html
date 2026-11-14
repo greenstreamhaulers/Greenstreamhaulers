@@ -207,44 +207,110 @@
       &copy; 2026 Green Stream Haulers • Serving Bloomington, Ellettsville & Monroe County, IN • (812) 681-6581
     </footer>
   </div>
-  <script type="module">
-    window.handleBooking = async function(e) {
-  e.preventDefault();
-  const btn = document.querySelector('.submit-btn');
-  const originalText = btn.textContent;
-  btn.textContent = 'Sending Your Request...';
-  btn.disabled = true;
+  <script>
+  let selectedTier = "Single Item / 1/8";
+  let basePrice = 85;
 
-  const orderData = {
-    jobId: Math.floor(1000 + Math.random() * 9000).toString(),
-    name: document.getElementById('cust-name').value.trim(),
-    phone: document.getElementById('cust-phone').value.trim(),
-    address: document.getElementById('cust-addr').value.trim(),
-    service: document.getElementById('sum-service')?.textContent || 'Standard Load',
-    total: document.getElementById('sum-total').textContent,
-    window: document.getElementById('cust-time').value
+  const tierStats = {
+    "Single Item / 1/8": { fill: "15%", lbs: "250 lbs" },
+    "1/4 Trailer Load": { fill: "25%", lbs: "500 lbs" },
+    "1/2 Trailer Load": { fill: "50%", lbs: "1,000 lbs" },
+    "Full 16ft Trailer": { fill: "100%", lbs: "2,200 lbs" },
+    "DIY 24hr Dump Trailer Rental": { fill: "100%", lbs: "2,000 lbs" }
   };
 
-  try {
-    const response = await fetch('/api/send-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(orderData)
+  function updateSummary() {
+    let mods = 0;
+    document.querySelectorAll('.addon:checked').forEach(a => {
+      mods += parseFloat(a.value || a.dataset.price || 0);
     });
 
-    if (response.ok) {
-      alert('Booking confirmed! Your Job ID is #' + orderData.jobId);
-      e.target.reset();
-    } else {
-      const err = await response.json();
-      alert('Error sending booking: ' + (err.error || 'Please try again.'));
-    }
-  } catch (error) {
-    alert('Network error. Please check your connection and try again.');
-  } finally {
-    btn.textContent = originalText;
-    btn.disabled = false;
-  }
-};
+    const finalTotal = Math.max(50, basePrice + mods);
 
- 
+    const serviceEl = document.getElementById('sum-service') || document.getElementById('sum-tier');
+    if (serviceEl) serviceEl.textContent = selectedTier;
+
+    const modsEl = document.getElementById('sum-mods');
+    if (modsEl) modsEl.textContent = (mods >= 0 ? '+$' : '-$') + Math.abs(mods);
+
+    const totalEl = document.getElementById('sum-total');
+    if (totalEl) totalEl.textContent = '$' + finalTotal;
+  }
+
+  // Automatically attach click handlers to every load size button
+  document.querySelectorAll('.tier-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      const titleEl = this.querySelector('.tier-title');
+      const priceEl = this.querySelector('.tier-price');
+
+      if (titleEl) selectedTier = titleEl.textContent.trim();
+      if (priceEl) basePrice = parseFloat(priceEl.textContent.replace(/[^0-9.]/g, '')) || 85;
+
+      const stats = tierStats[selectedTier] || { fill: "15%", lbs: "250 lbs" };
+      const fillText = document.querySelector('.eco-note strong');
+      const lbsText = document.querySelectorAll('.eco-note strong')[1];
+      const barFill = document.querySelector('.bar-bg div');
+
+      if (fillText) fillText.textContent = stats.fill;
+      if (lbsText) lbsText.textContent = stats.lbs;
+      if (barFill) barFill.style.width = stats.fill;
+
+      updateSummary();
+    });
+  });
+
+  // Automatically attach change handlers to all add-on checkboxes
+  document.querySelectorAll('.addon').forEach(box => {
+    box.addEventListener('change', updateSummary);
+  });
+
+  // Handle form submission & send email via Vercel API
+  window.handleBooking = async function(e) {
+    e.preventDefault();
+    const btn = document.querySelector('.submit-btn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Sending Your Request...';
+    btn.disabled = true;
+
+    const orderData = {
+      jobId: Math.floor(1000 + Math.random() * 9000).toString(),
+      name: document.getElementById('cust-name').value.trim(),
+      phone: document.getElementById('cust-phone').value.trim(),
+      address: document.getElementById('cust-addr').value.trim(),
+      service: selectedTier,
+      total: document.getElementById('sum-total').textContent,
+      window: document.getElementById('cust-time').value
+    };
+
+    try {
+      const response = await fetch('/api/send-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+
+      if (response.ok) {
+        alert('Booking confirmed! Your Job ID is #' + orderData.jobId);
+        e.target.reset();
+        updateSummary();
+      } else {
+        const err = await response.json();
+        alert('Error sending booking: ' + (err.error || 'Please try again.'));
+      }
+    } catch (error) {
+      alert('Network error. Please check your connection and try again.');
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  };
+
+  // Run once on load so initial summary matches default selection
+  updateSummary();
+</script>
+  </body>
+</html>
+
